@@ -584,10 +584,4 @@ def render_eda(data):
 # Exposing the Streamlit app running on port 8501 to the web using LocalTunnel
 !npx localtunnel --port 8501
 
-#Kill any existing services
-!pkill -f streamlit
-!pkill -f lt
 
-#Start fresh
-!nohup streamlit run air_quality_app.py &>/dev/null&
-!npx localtunnel --port 8501
