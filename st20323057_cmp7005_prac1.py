@@ -41,11 +41,11 @@ drive.mount('/content/drive')
 # %cd /content/drive/MyDrive/CMP7005/
 
 # Install necessary packages (uncomment if not already installed)
-pip install streamlit
-!pip3 install scikit-learn
-!pip3 install pandas
-!pip3 install matplotlib
-!pip3 install seaborn
+#pip install streamlit
+#!pip3 install scikit-learn
+#!pip3 install pandas
+#!pip3 install matplotlib
+#!pip3 install seaborn
 
 import pandas as pd
 
