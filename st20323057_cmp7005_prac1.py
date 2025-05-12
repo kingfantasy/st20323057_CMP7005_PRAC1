@@ -97,9 +97,6 @@ if 'wd' in data.columns:
 # Remove any duplicate rows from the dataset
 data.drop_duplicates(inplace=True)
 
-# ---------------------------------------------------------
-# Encoding Categorical Variable: 'wd' (Wind Direction)
-# ---------------------------------------------------------
 
 from sklearn.preprocessing import LabelEncoder  # Import LabelEncoder for converting categorical to numerical values
 
@@ -213,14 +210,6 @@ plt.tight_layout()
 # Display the heatmap
 plt.show()
 
-#!pip install ydata-profiling
-
-#from ydata_profiling import ProfileReport
-#profile = ProfileReport(data, title="Pandas Profiling Report", explorative=True)
-#profile.to_file("dataset_report.html")
-
-# Display the report in Jupyter Notebook (optional)
-#profile.to_notebook_iframe()
 
 # Define the list of features (independent variables) used to predict PM2.5
 features = ['PM10', 'SO2', 'NO2', 'CO', 'O3', 'TEMP', 'PRES', 'DEWP', 'RAIN', 'WSPM', 'wd']
