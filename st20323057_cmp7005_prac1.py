@@ -414,10 +414,10 @@ plt.show()
 
 # Commented out IPython magic to ensure Python compatibility.
 # %%writefile app.py
- import streamlit as st
- import pandas as pd
- import matplotlib.pyplot as plt
- import seaborn as sns
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
  from sklearn.model_selection import train_test_split
  from sklearn.linear_model import LinearRegression
  from sklearn.metrics import mean_squared_error, r2_score
