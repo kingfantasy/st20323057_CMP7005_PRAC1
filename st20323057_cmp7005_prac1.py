@@ -438,16 +438,27 @@ st.markdown("""
  
  
 #Load Dataset
+# Load Dataset
 @st.cache_data
 def load_data():
     try:
         data = pd.read_csv("merged_dataset.csv")
+        
+        # Fill missing values in numeric columns with median
         numeric_cols = data.select_dtypes(include=['number']).columns
-        data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
+        for col in numeric_cols:
+            data[col].fillna(data[col].median(), inplace=True)
+        
+        # Handle 'wd' (wind direction) if it exists
+        if 'wd' in data.columns:
+            from sklearn.preprocessing import LabelEncoder
+            le = LabelEncoder()
+            data['wd'] = le.fit_transform(data['wd'].astype(str))
+        
         return data
-    except FileNotFoundError:
-        st.error("🚫 File 'merged_dataset.csv' not found. Please upload the dataset.")
-        return None
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on failure
 
  
 #Sidebar Navigation
