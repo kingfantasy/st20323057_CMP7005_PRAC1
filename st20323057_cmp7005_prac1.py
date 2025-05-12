@@ -410,170 +410,170 @@ plt.show()
 !pip install pyngrok
 
 # Install Streamlit again with the '-q' flag, which suppresses unnecessary output during installation.
-pip install streamlit -q
+!pip install streamlit -q
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%writefile app.py
-# import streamlit as st
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# from sklearn.model_selection import train_test_split
-# from sklearn.linear_model import LinearRegression
-# from sklearn.metrics import mean_squared_error, r2_score
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.ensemble import GradientBoostingRegressor
-# 
-# #Page Config & Style
-# st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
-# 
-# #Custom CSS for styling the app
-# st.markdown("""
-#     <style>
-#         .main { background-color: #f0f2f6; }
-#         h1, h2, h3 { color: #003366; }
-#         .stSlider > div > div { background: #e0f7fa; }
-#     </style>
-# """, unsafe_allow_html=True)
-# 
-# 
-# #Load Dataset
-# @st.cache_data
-# def load_data():
-#     try:
-#         data = pd.read_csv("merged_dataset.csv")
-#         numeric_cols = data.select_dtypes(include=['number']).columns
-#         data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
-#         return data
-#     except FileNotFoundError:
-#         st.error("🚫 File 'merged_dataset.csv' not found. Please upload the dataset.")
-#         return None
-# 
-# 
-# #Sidebar Navigation
-# st.sidebar.title("🔍 Navigation")
-# page = st.sidebar.radio("Go to", ["📊 Data Overview", "📈 EDA", "🤖 Modeling & Prediction"])
-# 
-# 
-# #Data Overview Page
-# def render_data_overview(data):
-#     st.title("📊 Dataset Overview")
-#     st.markdown("A quick look at the structure and summary of the air quality dataset.")
-# 
-#     # Dataset preview
-#     with st.expander("📁 Dataset Preview"):
-#         st.dataframe(data.head())
-# 
-#     # Data types and summary statistics
-#     with st.expander("📋 Data Types"):
-#         st.write(data.dtypes)
-# 
-#     with st.expander("📈 Summary Statistics"):
-#         st.write(data.describe())
-# 
-# 
-# #EDA Page
-# def render_eda(data):
-#     st.title("📈 Exploratory Data Analysis")
-#     st.markdown("Analyze PM2.5 patterns, weather conditions, and correlations.")
-# 
-#     # Filter data by year
-#     year_range = st.slider("📅 Filter by Year", 2013, 2017, (2013, 2017))
-#     filtered = data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])]
-#     st.markdown(f"Showing data between **{year_range[0]} - {year_range[1]}**")
-# 
-#     # Tabs for different EDA visualizations
-#     tabs = st.tabs(["📦 PM2.5 Distribution", "🌡️ PM2.5 vs Temperature", "🧮 Correlation Heatmap"])
-# 
-#     # PM2.5 Level Distribution
-#     with tabs[0]:
-#         bins = [0, 25, 50, 75, 100, 150, 200, 300]
-#         labels = ['0-25', '25-50', '50-75', '75-100', '100-150', '150-200', '200-300']
-#         data['PM2.5_Binned'] = pd.cut(data['PM2.5'], bins=bins, labels=labels)
-#         bin_counts = data['PM2.5_Binned'].value_counts(sort=False)
-# 
-#         fig, ax = plt.subplots(figsize=(8, 6))
-#         bin_counts.plot(kind='bar', color='#29b6f6', edgecolor='black', ax=ax)
-#         ax.set_title("PM2.5 Level Distribution")
-#         ax.set_xlabel("PM2.5 Bins (µg/m³)")
-#         ax.set_ylabel("Count")
-#         st.pyplot(fig)
-# 
-#     # PM2.5 vs Temperature
-#     with tabs[1]:
-#         fig, ax = plt.subplots(figsize=(10, 6))
-#         hb = ax.hexbin(data['TEMP'].fillna(0), data['PM2.5'].fillna(0), gridsize=30, cmap='coolwarm', mincnt=1)
-#         plt.colorbar(hb, ax=ax, label='Count')
-#         ax.set_xlabel("Temperature (°C)")
-#         ax.set_ylabel("PM2.5 (µg/m³)")
-#         ax.set_title("Hexbin: PM2.5 vs Temperature")
-#         st.pyplot(fig)
-# 
-#     # Correlation Heatmap
-#     with tabs[2]:
-#         corr = filtered.select_dtypes(include=['number']).corr()
-#         fig, ax = plt.subplots(figsize=(12, 8))
-#         sns.heatmap(corr, annot=True, fmt=".2f", cmap="viridis", ax=ax, linewidths=0.5)
-#         ax.set_title("Correlation Heatmap")
-#         st.pyplot(fig)
-# 
-# 
-# #Modeling Page
-# def render_modeling(data):
-#     st.title("🤖 Modeling & Prediction")
-#     st.markdown("Using machine learning to predict **PM2.5** based on other features.")
-# 
-#     # Features and target variable
-#     features = ['PM10', 'SO2', 'NO2', 'CO', 'O3', 'TEMP', 'PRES', 'DEWP', 'RAIN', 'WSPM']
-#     target = 'PM2.5'
-# 
-#     X = data[features].select_dtypes(include=['float64', 'int64'])
-#     y = data[target]
-# 
-#     # Standardize the features
-#     scaler = StandardScaler()
-#     X_scaled = scaler.fit_transform(X)
-# 
-#     # Split data into train and test sets
-#     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-# 
-#     # Choose the model
-#     model_choice = st.radio("Choose Model", ["Linear Regression", "Gradient Boosting"])
-# 
-#     # Train and evaluate the chosen model
-#     if model_choice == "Linear Regression":
-#         model = LinearRegression()
-#     else:
-#         model = GradientBoostingRegressor(random_state=42)
-# 
-#     model.fit(X_train, y_train)
-#     y_pred = model.predict(X_test)
-# 
-#     mse = mean_squared_error(y_test, y_pred)
-#     r2 = r2_score(y_test, y_pred)
-# 
-#     st.metric(label="Mean Squared Error", value=f"{mse:.2f}")
-#     st.metric(label="R-squared Score", value=f"{r2:.2f}")
-# 
-#     # Plot Actual vs Predicted
-#     fig, ax = plt.subplots(figsize=(10, 6))
-#     sns.regplot(x=y_test, y=y_pred, ax=ax, scatter_kws={"alpha": 0.6}, line_kws={"color": "red"})
-#     ax.set_title(f"{model_choice}: Actual vs Predicted")
-#     ax.set_xlabel("Actual PM2.5")
-#     ax.set_ylabel("Predicted PM2.5")
-#     st.pyplot(fig)
-# 
-# 
-# #Main App
-# data = load_data()
-# if data is not None:
-#     if page == "📊 Data Overview":
-#         render_data_overview(data)
-#     elif page == "📈 EDA":
-#         render_eda(data)
-#     elif page == "🤖 Modeling & Prediction":
-#         render_modeling(data)
-#
+ %%writefile app.py
+ import streamlit as st
+ import pandas as pd
+ import matplotlib.pyplot as plt
+ import seaborn as sns
+ from sklearn.model_selection import train_test_split
+ from sklearn.linear_model import LinearRegression
+ from sklearn.metrics import mean_squared_error, r2_score
+ from sklearn.preprocessing import StandardScaler
+ from sklearn.ensemble import GradientBoostingRegressor
+ 
+ #Page Config & Style
+ st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
+ 
+ #Custom CSS for styling the app
+ st.markdown("""
+     <style>
+         .main { background-color: #f0f2f6; }
+         h1, h2, h3 { color: #003366; }
+         .stSlider > div > div { background: #e0f7fa; }
+     </style>
+ """, unsafe_allow_html=True)
+ 
+ 
+ #Load Dataset
+ @st.cache_data
+ def load_data():
+     try:
+         data = pd.read_csv("merged_dataset.csv")
+         numeric_cols = data.select_dtypes(include=['number']).columns
+         data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
+         return data
+     except FileNotFoundError:
+         st.error("🚫 File 'merged_dataset.csv' not found. Please upload the dataset.")
+         return None
+ 
+ 
+#Sidebar Navigation
+ st.sidebar.title("🔍 Navigation")
+ page = st.sidebar.radio("Go to", ["📊 Data Overview", "📈 EDA", "🤖 Modeling & Prediction"])
+ 
+ 
+ #Data Overview Page
+  def render_data_overview(data):
+     st.title("📊 Dataset Overview")
+     st.markdown("A quick look at the structure and summary of the air quality dataset.")
+ 
+     # Dataset preview
+     with st.expander("📁 Dataset Preview"):
+         st.dataframe(data.head())
+ 
+     # Data types and summary statistics
+     with st.expander("📋 Data Types"):
+         st.write(data.dtypes)
+ 
+     with st.expander("📈 Summary Statistics"):
+         st.write(data.describe())
+ 
+ 
+ #EDA Page
+def render_eda(data):
+     st.title("📈 Exploratory Data Analysis")
+     st.markdown("Analyze PM2.5 patterns, weather conditions, and correlations.")
+
+     # Filter data by year
+     year_range = st.slider("📅 Filter by Year", 2013, 2017, (2013, 2017))
+     filtered = data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])]
+     st.markdown(f"Showing data between **{year_range[0]} - {year_range[1]}**")
+ 
+     # Tabs for different EDA visualizations
+     tabs = st.tabs(["📦 PM2.5 Distribution", "🌡️ PM2.5 vs Temperature", "🧮 Correlation Heatmap"])
+ 
+     # PM2.5 Level Distribution
+     with tabs[0]:
+         bins = [0, 25, 50, 75, 100, 150, 200, 300]
+         labels = ['0-25', '25-50', '50-75', '75-100', '100-150', '150-200', '200-300']
+         data['PM2.5_Binned'] = pd.cut(data['PM2.5'], bins=bins, labels=labels)
+         bin_counts = data['PM2.5_Binned'].value_counts(sort=False)
+ 
+         fig, ax = plt.subplots(figsize=(8, 6))
+         bin_counts.plot(kind='bar', color='#29b6f6', edgecolor='black', ax=ax)
+         ax.set_title("PM2.5 Level Distribution")
+         ax.set_xlabel("PM2.5 Bins (µg/m³)")
+         ax.set_ylabel("Count")
+         st.pyplot(fig)
+ 
+     # PM2.5 vs Temperature
+     with tabs[1]:
+         fig, ax = plt.subplots(figsize=(10, 6))
+         hb = ax.hexbin(data['TEMP'].fillna(0), data['PM2.5'].fillna(0), gridsize=30, cmap='coolwarm', mincnt=1)
+         plt.colorbar(hb, ax=ax, label='Count')
+         ax.set_xlabel("Temperature (°C)")
+         ax.set_ylabel("PM2.5 (µg/m³)")
+         ax.set_title("Hexbin: PM2.5 vs Temperature")
+         st.pyplot(fig)
+ 
+     # Correlation Heatmap
+     with tabs[2]:
+         corr = filtered.select_dtypes(include=['number']).corr()
+         fig, ax = plt.subplots(figsize=(12, 8))
+         sns.heatmap(corr, annot=True, fmt=".2f", cmap="viridis", ax=ax, linewidths=0.5)
+         ax.set_title("Correlation Heatmap")
+         st.pyplot(fig)
+ 
+ 
+ #Modeling Page
+ def render_modeling(data):
+     st.title("🤖 Modeling & Prediction")
+     st.markdown("Using machine learning to predict **PM2.5** based on other features.")
+ 
+     # Features and target variable
+     features = ['PM10', 'SO2', 'NO2', 'CO', 'O3', 'TEMP', 'PRES', 'DEWP', 'RAIN', 'WSPM']
+     target = 'PM2.5'
+ 
+     X = data[features].select_dtypes(include=['float64', 'int64'])
+     y = data[target]
+ 
+     # Standardize the features
+     scaler = StandardScaler()
+     X_scaled = scaler.fit_transform(X)
+ 
+     # Split data into train and test sets
+     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+ 
+     # Choose the model
+     model_choice = st.radio("Choose Model", ["Linear Regression", "Gradient Boosting"])
+ 
+     # Train and evaluate the chosen model
+     if model_choice == "Linear Regression":
+         model = LinearRegression()
+     else:
+         model = GradientBoostingRegressor(random_state=42)
+ 
+     model.fit(X_train, y_train)
+     y_pred = model.predict(X_test)
+ 
+    mse = mean_squared_error(y_test, y_pred)
+     r2 = r2_score(y_test, y_pred)
+ 
+     st.metric(label="Mean Squared Error", value=f"{mse:.2f}")
+     st.metric(label="R-squared Score", value=f"{r2:.2f}")
+ 
+     # Plot Actual vs Predicted
+     fig, ax = plt.subplots(figsize=(10, 6))
+     sns.regplot(x=y_test, y=y_pred, ax=ax, scatter_kws={"alpha": 0.6}, line_kws={"color": "red"})
+     ax.set_title(f"{model_choice}: Actual vs Predicted")
+     ax.set_xlabel("Actual PM2.5")
+     ax.set_ylabel("Predicted PM2.5")
+     st.pyplot(fig)
+ 
+ 
+ #Main App
+ data = load_data()
+ if data is not None:
+     if page == "📊 Data Overview":
+         render_data_overview(data)
+     elif page == "📈 EDA":
+         render_eda(data)
+     elif page == "🤖 Modeling & Prediction":
+         render_modeling(data)
+
 
 # Using wget to fetch the public IPv4 address of the system
 !wget -q -O - ipv4.icanhazip.com
