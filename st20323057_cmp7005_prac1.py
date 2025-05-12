@@ -425,50 +425,50 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor
  
  #Page Config & Style
- st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
+st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
  
  #Custom CSS for styling the app
- st.markdown("""
-     <style>
-         .main { background-color: #f0f2f6; }
-         h1, h2, h3 { color: #003366; }
-         .stSlider > div > div { background: #e0f7fa; }
-     </style>
+st.markdown("""
+    <style>
+        .main { background-color: #f0f2f6; }
+        h1, h2, h3 { color: #003366; }
+        .stSlider > div > div { background: #e0f7fa; }
+    </style>
  """, unsafe_allow_html=True)
  
  
- #Load Dataset
- @st.cache_data
- def load_data():
-     try:
-         data = pd.read_csv("merged_dataset.csv")
-         numeric_cols = data.select_dtypes(include=['number']).columns
-         data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
-         return data
-     except FileNotFoundError:
-         st.error("🚫 File 'merged_dataset.csv' not found. Please upload the dataset.")
-         return None
- 
+#Load Dataset
+@st.cache_data
+def load_data():
+    try:
+        data = pd.read_csv("merged_dataset.csv")
+        numeric_cols = data.select_dtypes(include=['number']).columns
+        data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
+        return data
+    except FileNotFoundError:
+        st.error("🚫 File 'merged_dataset.csv' not found. Please upload the dataset.")
+        return None
+
  
 #Sidebar Navigation
- st.sidebar.title("🔍 Navigation")
- page = st.sidebar.radio("Go to", ["📊 Data Overview", "📈 EDA", "🤖 Modeling & Prediction"])
+st.sidebar.title("🔍 Navigation")
+page = st.sidebar.radio("Go to", ["📊 Data Overview", "📈 EDA", "🤖 Modeling & Prediction"])
  
  
- #Data Overview Page
-  def render_data_overview(data):
-     st.title("📊 Dataset Overview")
-     st.markdown("A quick look at the structure and summary of the air quality dataset.")
- 
-     # Dataset preview
-     with st.expander("📁 Dataset Preview"):
+#Data Overview Page
+ def render_data_overview(data):
+    st.title("📊 Dataset Overview")
+    st.markdown("A quick look at the structure and summary of the air quality dataset.")
+
+    # Dataset preview
+    with st.expander("📁 Dataset Preview"):
          st.dataframe(data.head())
  
-     # Data types and summary statistics
-     with st.expander("📋 Data Types"):
+    # Data types and summary statistics
+    with st.expander("📋 Data Types"):
          st.write(data.dtypes)
  
-     with st.expander("📈 Summary Statistics"):
+    with st.expander("📈 Summary Statistics"):
          st.write(data.describe())
  
  
