@@ -456,7 +456,7 @@ page = st.sidebar.radio("Go to", ["📊 Data Overview", "📈 EDA", "🤖 Modeli
  
  
 #Data Overview Page
- def render_data_overview(data):
+def render_data_overview(data):
     st.title("📊 Dataset Overview")
     st.markdown("A quick look at the structure and summary of the air quality dataset.")
 
