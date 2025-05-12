@@ -404,13 +404,13 @@ plt.tight_layout()
 plt.show()
 
 # Install Pyngrok, which allows you to expose your local application (such as a Streamlit app) to the web.
-!pip install streamlit
+#!pip install streamlit
 
 # Install Pyngrok, which allows you to expose your local application (such as a Streamlit app) to the web.
-!pip install pyngrok
+#!pip install pyngrok
 
 # Install Streamlit again with the '-q' flag, which suppresses unnecessary output during installation.
-!pip install streamlit -q
+#!pip install streamlit -q
 
 # Commented out IPython magic to ensure Python compatibility.
  %%writefile app.py
